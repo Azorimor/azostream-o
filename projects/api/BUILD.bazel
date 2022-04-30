@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_test", "go_library")
+
+# gazelle:prefix github.com/example/project
+# gazelle:build_file_name BUILD,BUILD.bazel
+
+go_binary(
+  name = "api",
+  srcs = ["main.go"]
+)
+
+go_library(
+  name = "api_lib",
+  importpath = "github.com/azorimor/azostream/projects/api",
+  srcs = ["main.go"],
+  visibility = ["//visibility:public"]
+)
+
+go_test(
+  name = "api_test",
+  srcs = ["main_test.go"],
+  args = ["$(location :api)"],
+  data = [":api"],
+  embed = [":api_lib"]
+)
